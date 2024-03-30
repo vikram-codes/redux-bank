@@ -1,4 +1,5 @@
 import { useReducer } from "react";
+import { createStore } from "redux";
 
 const initialState = {
   balance: 0,
@@ -31,9 +32,15 @@ function reducer(state = initialState, action) {
   }
 }
 
-function Store() {
-  const [{ balance, loan, loanPurpose }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
-}
+// function Store() {
+//   const [{ balance, loan, loanPurpose }, dispatch] = useReducer(
+//     reducer,
+//     initialState
+//   );
+// }
+
+const store = createStore(reducer);
+
+store.dispatch({ type: "account/deposit", payload: 500 });
+
+console.log(store.getState());
