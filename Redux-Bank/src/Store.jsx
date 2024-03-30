@@ -13,10 +13,18 @@ function reducer(state = initialState, action) {
         ...state,
         balance: state.balance + action.payload,
       };
-    case "account/withdrawal":
+    case "account/withdraw ":
       return {
         ...state,
         balance: state.balance - action.payload,
+      };
+    case "account/requestLoan":
+      if (state.loan > 0) return state;
+      return { ...state, loan: state.loan + action.payload };
+    case "account/payLoan":
+      return {
+        ...state,
+        loan: state.loan - action.payload,
       };
     default:
       return state;
