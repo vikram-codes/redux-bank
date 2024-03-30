@@ -1,13 +1,19 @@
 import { useReducer } from "react";
-import { createStore } from "redux";
+import { createStore, combineReducers } from "redux";
 
-const initialState = {
+const initialStateAccount = {
   balance: 0,
   loan: 0,
   loanPurpose: "",
 };
 
-function reducer(state = initialState, action) {
+const initialStateCustomer = {
+  fullName: "",
+  nationalId: "",
+  createdAt: "",
+};
+
+function accountReducer(state = initialStateAccount, action) {
   switch (action.type) {
     case "account/deposit":
       return {
@@ -39,6 +45,25 @@ function reducer(state = initialState, action) {
   }
 }
 
+function customerReducer(state = initialStateCustomer, action) {
+  switch (action.type) {
+    case "customer/createdCustomer":
+      return {
+        ...state,
+        fullName: action.payload.name,
+        nationalId: action.payload.nationalId,
+        createdAt: action.payload.createdAt,
+      };
+    case "customer/updateName":
+      return {
+        ...state,
+        fullName: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
 // function Store() {
 //   const [{ balance, loan, loanPurpose }, dispatch] = useReducer(
 //     reducer,
@@ -46,7 +71,12 @@ function reducer(state = initialState, action) {
 //   );
 // }
 
-const store = createStore(reducer);
+const rootReducer = combineReducers({
+  account: accountReducer,
+  customer: customerReducer,
+});
+
+const store = createStore(rootReducer);
 
 // store.dispatch({ type: "account/deposit", payload: 500 });
 
@@ -63,9 +93,21 @@ function payLoan(amount) {
   return { type: "account/payLoan", payload: amount };
 }
 
+function createCustomer(name, nationalId) {
+  return {
+    type: "customer/createdCustomer",
+    payload: { name, nationalId, createdAt: new Date().toISOString() },
+  };
+}
+
+function updateName(name) {
+  return { type: "customer/updateName", payload: name };
+}
+
 store.dispatch(deposit(500));
 store.dispatch(withdraw(200));
 store.dispatch(requestLoan(500, "buy cheap car"));
 store.dispatch(payLoan(500));
+store.dispatch(createCustomer("Vikramjit Singh Saini", "123456789"));
 
 console.log(store.getState());
