@@ -15,13 +15,13 @@ function AccountOperations() {
     balance,
     loanPurpose: currentLoanPurpose,
   } = useSelector((store) => store.account);
-  console.log(balance, loanAmount);
 
   function handleDeposit() {
     if (!depositAmount) return;
 
-    dispatch(deposit(depositAmount));
+    dispatch(deposit(depositAmount, currency));
     setDepositAmount("");
+    setCurrency("");
   }
 
   function handleWithdrawal() {
